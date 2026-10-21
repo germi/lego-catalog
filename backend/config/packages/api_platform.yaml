@@ -1,0 +1,23 @@
+api_platform:
+    title: LEGO Catalog
+    description: Parts, elements, colours, sets and minifigures, plus what of it I actually own.
+    version: 1.0.0
+
+    # Plain JSON first, so the SPA gets bare objects and arrays rather than
+    # JSON-LD documents. JSON-LD stays available for anything that wants it.
+    formats:
+        json: ['application/json']
+        jsonld: ['application/ld+json']
+
+    # Accept a plain JSON body on PATCH too — saves the frontend from having to set
+    # an unusual Content-Type on every update.
+    patch_formats:
+        json: ['application/merge-patch+json', 'application/json']
+
+    defaults:
+        stateless: true
+        # Keep null fields in the payload so the frontend always sees the same shape.
+        normalization_context:
+            skip_null_values: false
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']

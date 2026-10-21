@@ -1,0 +1,9 @@
+/backend/vendor/
+/backend/var/
+/backend/public/app/
+/backend/.env.local
+/frontend/node_modules/
+/frontend/auto-imports.d.ts
+/frontend/components.d.ts
+/frontend/typed-router.d.ts
+.DS_Store

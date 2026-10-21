@@ -1,0 +1,33 @@
+{
+  "name": "sidecharts",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".":         "./index.js",
+    "./vue":          "./vue/index.js",
+    "./vue/layers":   "./vue/layers/index.js",
+    "./vue/maps":     "./vue/maps/index.js",
+    "./vue/*":        "./vue/*",
+    "./react":   "./react/index.js",
+    "./react/*": "./react/*",
+    "./core":    "./core/index.js",
+    "./core/*":  "./core/*",
+    "./fill":    "./fill/index.js",
+    "./fill/*":  "./fill/*",
+    "./utils/*":  "./utils/*",
+    "./assets/*": "./assets/*"
+  },
+  "peerDependencies": {
+    "vue":      ">=3",
+    "react":    ">=18",
+    "react-dom": ">=18",
+    "d3":       ">=7",
+    "gsap":     ">=3.15",
+    "textures": ">=1.2.3"
+  },
+  "peerDependenciesMeta": {
+    "vue":       { "optional": true },
+    "react":     { "optional": true },
+    "react-dom": { "optional": true }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "TITLE": "Catàleg LEGO",
+  "NAV": {
+    "BRAND": "Catàleg LEGO",
+    "API": "API"
+  },
+  "PARTS": {
+    "TITLE": "Peces",
+    "SUBTITLE": "Una peça és una forma. El mateix motlle en un color concret és un element.",
+    "SEARCH": "Cerca",
+    "SEARCH_PLACEHOLDER": "Número o nom (p. ex. 3001 o Brick 2 x 4)",
+    "CATEGORY": "Categoria",
+    "ALL_CATEGORIES": "Totes les categories",
+    "COLOR": "Color",
+    "ANY_COLOR": "Qualsevol color",
+    "DECORATED_ONLY": "Només decorades",
+    "CLEAR": "Neteja els filtres",
+    "EMPTY": "Cap peça coincideix amb aquests filtres.",
+    "COLOR_COUNT": "cap color | 1 color | {count} colors",
+    "PREV": "Anterior",
+    "NEXT": "Següent",
+    "PAGE": "Pàgina {page}",
+    "NO_FAMILY": "Sense família"
+  },
+  "PART": {
+    "BACK": "← Torna a les peces",
+    "NOT_FOUND": "No s'ha trobat aquesta peça.",
+    "CATEGORY": "Categoria",
+    "SIZE": "Mida en tatxes",
+    "MATERIAL": "Material",
+    "COLOR_COUNT": "Colors coneguts",
+    "ALSO_KNOWN_AS": "També respon als números ",
+    "RELATED": "Formes relacionades",
+    "ELEMENTS": "Elements",
+    "ELEMENTS_HELP": "Aquesta mateixa forma, un element per cada color en què s'ha fabricat.",
+    "REL": {
+      "PRINT": "impressió",
+      "PATTERN": "patró",
+      "MOULD_VARIANT": "variant de motlle",
+      "PAIR": "parella",
+      "ALTERNATE": "alternativa",
+      "SUB_PART": "subpeça"
+    }
+  },
+  "TIME": {
+    "JUST_NOW": "Ara mateix",
+    "NEVER": "Mai"
+  },
+  "ERRORS": {
+    "LOAD": "No s'han pogut carregar les dades.",
+    "GENERIC": "Alguna cosa ha anat malament.",
+    "NO_API": "No es pot connectar amb l'API."
+  }
+}

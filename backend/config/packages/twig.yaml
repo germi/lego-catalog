@@ -1,0 +1,6 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    # Timestamps are stored in UTC. Alert emails are read by a human in one place,
+    # so render dates in that timezone rather than UTC.
+    date:
+        timezone: '%env(TRACKER_TIMEZONE)%'

@@ -1,0 +1,11 @@
+export { default as AfricaMap } from "./AfricaMap.vue";
+export { default as BaseMap } from "./BaseMap.vue";
+export { default as WorldMap } from "./WorldMap.vue";
+export { default as EuropeMap } from "./EuropeMap.vue";
+export { default as EuropeRegionsMap } from "./EuropeRegionsMap.vue";
+export { default as SpainRegionsMap } from "./SpainRegionsMap.vue";
+export { default as SpainProvincesMap } from "./SpainProvincesMap.vue";
+export { default as UsaStatesMap } from "./UsaStatesMap.vue";
+export { default as BarcelonaMap } from "./BarcelonaMap.vue";
+export { default as DistrictMap } from "./DistrictMap.vue";
+export { default as EuskalHerriaMap } from "./EuskalHerriaMap.vue";
