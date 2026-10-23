@@ -98,37 +98,47 @@ is exactly what the box says.
 
 ## Part images
 
-Not implemented yet, and worth writing down because the licensing is the deciding
-factor rather than the code.
+Part drawings come from [Brick Architect](https://brickarchitect.com/parts/), **used with
+Tom Alphin's permission**. They are not openly licensed — the site otherwise states that
+use of its content without permission is prohibited — so credit him anywhere they appear,
+as `PartThumb` and the part page do.
 
-- **[Brick Architect](https://brickarchitect.com/parts/)'s black-on-white line drawings
-  are the look to aim for, and cannot be used.** The site states "Use of this content
-  without permission is prohibited", the images are © Brick Architect LLC, the labels
-  ship only as Brother `.lbx` files plus a low-resolution PDF contact sheet, and no
-  vector format is offered. The page does say they were made with "custom LDraw
-  scripts", which are described as proprietary — and that is the useful part, because it
-  names the source.
-- **The [LDraw Parts Library](https://ldraw.org/legal-info) is the licence-clean route.**
-  It is CC BY (2.0, with a 4.0 migration under way), and LDraw's own legal page states
-  that rendered images — "any conversion of a 3D model into a 2D image" — are *not*
-  considered derivative works of the parts, and that crediting "The LDraw Parts Library"
-  is sufficient in lieu of a full author list. We would credit it regardless.
-- **`.dat` files already contain the lines.** LDraw geometry is explicit: line type 2 is
-  an edge, type 5 is a conditional edge that draws only when it lies on the silhouette.
-  So black-on-white vector art does not need silhouette detection from facets — the
-  creases are authored, and the conditional rule is a cheap test. A recursive reader
-  (type 1 sub-file references carry a 3×4 transform), an orthographic or isometric
-  projection, and an SVG writer is a tractable amount of code.
-- **Nothing off the shelf does this.** LDView has an SVG export, but its author says it
-  is bad enough that it was never moved out of experimental, and it is disabled by
-  default. The three.js route loses outlines under `SVGRenderer`. Existing converters go
-  the wrong way (SVG → `.dat`) or to other formats (OpenSCAD, three.js JSON).
-- **Meanwhile**, Rebrickable's own part and element images are the pragmatic placeholder:
-  colour renders rather than line art, at predictable CDN URLs. `Part.imageUrl` and
-  `Element.imageUrl` exist and are empty.
+`app:images:brickarchitect` mirrors them:
 
-The schema is already ready for the LDraw route: `Part.ldrawId` and
-`PartNumberSource::LDraw` are both in place.
+```bash
+php bin/console app:images:brickarchitect --delay=400   # ~20 minutes, polite spacing
+```
+
+Notes on how it works and what it covers:
+
+- **Which parts he covers is read from his twelve top-level category pages**, which list
+  every part in the guide with its image URL. Twelve requests to learn the whole set,
+  rather than probing all 64,901 of our part numbers against his server.
+- **The images are mirrored, not hot-linked.** 2,500 requests per page-load is not a
+  reasonable thing to do to someone else's server, local copies survive his URLs
+  changing, and serving them same-origin avoids referrer and CORS surprises. They land
+  in `backend/public/parts/brickarchitect/` (gitignored) and `Part.imageUrl` points at
+  them.
+- **Coverage is 2,509 drawings over 2,682 of our parts** — 2,368 matched by exact number
+  and 314 as mould variants, because he names a part by its base mould number where
+  Rebrickable adds a variant letter (his `2412` is our `2412a` and `2412b`; his `973` our
+  `973c00`). The drawing is of the mould, so it is true of every variant of it.
+- **Against the whole catalogue that is about 4%, but against what you actually browse it
+  is about 95%**: of the twenty most-used parts, nineteen have a drawing; of twenty
+  random parts, four do. A curated guide covers the parts people handle, not the long
+  tail of printed variants and Duplo.
+- **Only one size is published**, 170 × 119 PNG. Fine for the grid tiles, soft on a
+  high-density display. Worth asking Tom for larger renders, since he generated them.
+- The run is resumable: a part already on disk is skipped unless `--force`.
+
+For the long tail the guide does not cover, the licence-clean route is the
+[LDraw Parts Library](https://ldraw.org/legal-info) — CC BY, and LDraw's legal page
+states that rendered images are not derivative works of the parts. LDraw `.dat` files
+carry explicitly authored edge geometry (type 2 edges, type 5 conditional edges), so
+true black-on-white vector art is a parser, a projection and an SVG writer rather than a
+research project. Nothing off the shelf does it: LDView's SVG export never left
+experimental by its author's own account. `Part.ldrawId` and `PartNumberSource::LDraw`
+are already in the schema for this.
 
 ## Credits
 
@@ -136,7 +146,8 @@ The schema is already ready for the LDraw route: `Part.ldrawId` and
 - The vocabulary and inventory conventions follow
   [BrickLink](https://www.bricklink.com/) and
   [New Elementary's glossary](https://www.newelementary.com/p/glossary.html).
-- The functional taxonomy and the storage-granularity idea are Tom Alphin's, from
-  [Brick Architect](https://brickarchitect.com/).
+- Part drawings, the functional taxonomy and the storage-granularity idea are Tom
+  Alphin's, from [Brick Architect](https://brickarchitect.com/). The drawings are used
+  with his permission and remain his.
 - LEGO® is a trademark of the LEGO Group, which does not sponsor, authorise or endorse
   this project.

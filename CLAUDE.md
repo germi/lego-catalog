@@ -111,16 +111,22 @@ this.
   overwritten by `npm run update-sidecharts`. Project-specific layers belong in
   `src/components/`. See `frontend/docs/SIDECHARTS.md`.
 - **Timestamps are UTC** everywhere in the backend; the SPA formats to local time.
+- **PHP casts numeric-looking array keys to `int`.** Part numbers are strings that often
+  look like integers, so `$map[$part->getNumber()]` then yields an `int` back out of
+  `array_keys()` or `foreach`, and the next `strlen()` fatals. This bit twice while
+  writing the image importer. Iterate values and read the number off the entity, or cast
+  back explicitly.
 
 ## Known gaps
 
 - **Minifigure numbers are Rebrickable's `fig-000001`, not BrickLink's `sw0001`.** The
   dumps do not carry BrickLink's, so a BrickLink number cannot be looked up yet. Parts
   have `part_number` for exactly this; minifigures would need the equivalent.
-- **Part images.** Nothing is stored yet. Brick Architect's line drawings are the look to
-  aim for but are explicitly not reusable ("Use of this content without permission is
-  prohibited"); the LDraw Parts Library is the licence-clean source. See the Part images
-  section of [README.md](README.md).
+- **Part images cover about 4% of parts, but about 95% of what you browse.** They are
+  Brick Architect's drawings, used with Tom Alphin's permission and *not* openly
+  licensed — credit him anywhere they appear. `app:images:brickarchitect` mirrors them;
+  the long tail would need the LDraw route. See the Part images section of
+  [README.md](README.md).
 - **No BrickLink or Brick Architect category assignments.** Both taxonomies exist and
   Brick Architect's twelve roots are seeded, but only the Rebrickable tree is populated,
   because only it ships as data.

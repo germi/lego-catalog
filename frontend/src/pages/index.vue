@@ -85,13 +85,7 @@
           :to="{ name: 'part', params: { number: part.number } }"
           class="ot-ring block rounded-lg border border-gray-200 bg-white p-3 transition hover:border-gray-400"
         >
-          <!-- No part artwork yet; see the Part images section of the README.
-               The number is the most useful thing to show in its place. -->
-          <div
-            class="flex aspect-4/3 items-center justify-center rounded bg-gray-50 text-sm font-medium text-gray-400"
-          >
-            {{ part.number }}
-          </div>
+          <PartThumb :part="part" />
           <p class="mt-2 line-clamp-2 text-sm font-medium text-gray-900">
             {{ part.shortName || part.name }}
           </p>

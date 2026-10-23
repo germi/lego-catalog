@@ -14,9 +14,25 @@
     </p>
 
     <template v-else>
-      <header class="mt-4">
-        <p class="font-mono text-sm text-gray-500">{{ part.number }}</p>
-        <h1 class="ot-title-1">{{ part.name }}</h1>
+      <header class="mt-4 flex items-start gap-5">
+        <PartThumb
+          :part="part"
+          size-class="h-28 w-36 shrink-0 rounded-lg border border-gray-200"
+        />
+        <div>
+          <p class="font-mono text-sm text-gray-500">{{ part.number }}</p>
+          <h1 class="ot-title-1">{{ part.name }}</h1>
+          <p v-if="part.imageUrl" class="mt-2 text-xs text-gray-400">
+            <OTText value="PART.IMAGE_CREDIT" />
+            <a
+              href="https://brickarchitect.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="ot-ring rounded underline hover:text-gray-600"
+              >brickarchitect.com</a
+            >
+          </p>
+        </div>
       </header>
 
       <!-- The shape's own facts. Everything here is true regardless of colour. -->
