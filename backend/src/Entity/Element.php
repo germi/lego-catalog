@@ -45,6 +45,10 @@ use Symfony\Component\Serializer\Attribute\Groups;
     denormalizationContext: ['groups' => ['element:write']],
     order: ['part.number' => 'ASC', 'color.name' => 'ASC'],
     paginationItemsPerPage: 60,
+    // The client decides its own page size; without this the request's itemsPerPage is
+    // silently ignored and the number above wins, which makes the UI and the API disagree.
+    paginationClientItemsPerPage: true,
+    paginationMaximumItemsPerPage: 200,
 )]
 #[QueryParameter(
     key: 'q',

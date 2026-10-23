@@ -34,19 +34,23 @@
       <dl class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div>
           <dt class="ot-label"><OTText value="SET.BOX_COUNT" /></dt>
-          <dd class="text-sm text-gray-900">{{ set.boxPieceCount }}</dd>
+          <dd class="text-sm text-gray-900">
+            {{ number(set.boxPieceCount, 0) }}
+          </dd>
         </div>
         <div>
           <dt class="ot-label"><OTText value="SET.LOOSE_PARTS" /></dt>
-          <dd class="text-sm text-gray-900">{{ set.numParts }}</dd>
+          <dd class="text-sm text-gray-900">{{ number(set.numParts, 0) }}</dd>
         </div>
         <div>
           <dt class="ot-label"><OTText value="SET.MINIFIG_PARTS" /></dt>
-          <dd class="text-sm text-gray-900">{{ set.numMinifigParts }}</dd>
+          <dd class="text-sm text-gray-900">
+            {{ number(set.numMinifigParts, 0) }}
+          </dd>
         </div>
         <div>
           <dt class="ot-label"><OTText value="SET.SPARES" /></dt>
-          <dd class="text-sm text-gray-900">{{ spareTotal }}</dd>
+          <dd class="text-sm text-gray-900">{{ number(spareTotal, 0) }}</dd>
         </div>
       </dl>
       <p class="mt-2 text-xs text-gray-400">
@@ -130,7 +134,7 @@
               :key="line.id"
               class="flex items-center gap-3 rounded border p-2"
               :class="
-                line.role === 'spare'
+                line.role === ROLE.SPARE
                   ? 'border-dashed border-gray-300 bg-gray-50'
                   : 'border-gray-200'
               "
@@ -162,7 +166,7 @@
                 }}</span>
                 <span class="block truncate text-xs text-gray-500">
                   {{ line.element.color.name }}
-                  <template v-if="line.role === 'spare'">
+                  <template v-if="line.role === ROLE.SPARE">
                     · <OTText value="SET.SPARE"
                   /></template>
                 </span>
@@ -177,6 +181,8 @@
 
 <script setup>
 import useLoadData from "@/functions/useLoadData";
+import { number } from "@/utils/helpers";
+import { ROLE } from "@/utils/ids";
 
 const { data: set, loading } = useLoadData("getSet", null, true);
 
@@ -222,7 +228,7 @@ const showSpares = ref(false);
 
 const spareTotal = computed(() =>
   inventory.value
-    .filter((line) => line.role === "spare")
+    .filter((line) => line.role === ROLE.SPARE)
     .reduce((total, line) => total + line.quantity, 0),
 );
 
@@ -232,7 +238,7 @@ const spareTotal = computed(() =>
  */
 const visibleLines = computed(() =>
   inventory.value
-    .filter((line) => showSpares.value || line.role !== "spare")
+    .filter((line) => showSpares.value || line.role !== ROLE.SPARE)
     .slice()
     .sort(
       (a, b) =>

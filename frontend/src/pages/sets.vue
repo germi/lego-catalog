@@ -61,7 +61,7 @@
     <p v-else-if="error" class="mt-10 text-sm text-red-600">
       <OTText value="ERRORS.LOAD" />
     </p>
-    <p v-else-if="!sets.length" class="mt-10 text-sm text-gray-500">
+    <p v-else-if="!sets.items.length" class="mt-10 text-sm text-gray-500">
       <OTText value="SETS.EMPTY" />
     </p>
 
@@ -69,7 +69,7 @@
       v-else
       class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
     >
-      <li v-for="set in sets" :key="set.id">
+      <li v-for="set in sets.items" :key="set.id">
         <RouterLink
           :to="{ name: 'set', params: { number: set.number } }"
           class="ot-ring block rounded-lg border border-gray-200 bg-white p-3 transition hover:border-gray-400"
@@ -99,7 +99,7 @@
             <span>
               <OTText
                 value="SETS.PIECES"
-                :options="{ count: set.boxPieceCount }"
+                :options="{ count: number(set.boxPieceCount, 0) }"
               />
             </span>
           </p>
@@ -107,25 +107,14 @@
       </li>
     </ul>
 
-    <div v-if="sets.length" class="mt-8 flex items-center justify-between">
-      <button
-        class="ot-btn text-sm disabled:opacity-40"
-        :disabled="page <= 1"
-        @click="page = page - 1"
-      >
-        <OTText value="PARTS.PREV" />
-      </button>
-      <span class="text-sm text-gray-500"
-        ><OTText value="PARTS.PAGE" :options="{ page }"
-      /></span>
-      <button
-        class="ot-btn text-sm disabled:opacity-40"
-        :disabled="sets.length < 48"
-        @click="page = page + 1"
-      >
-        <OTText value="PARTS.NEXT" />
-      </button>
-    </div>
+    <OTPagination
+      v-if="sets.total > PER_PAGE.SETS"
+      class="mt-8 pt-4"
+      :current-page="page"
+      :total-items="sets.total"
+      :items-per-page="PER_PAGE.SETS"
+      @change-page="page = $event"
+    />
   </main>
 </template>
 
@@ -134,7 +123,9 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import useLoadData from "@/functions/useLoadData";
+import { number } from "@/utils/helpers";
 import { useSingleRouteFilter } from "@/functions/useFilters";
+import { PER_PAGE } from "@/utils/ids";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -199,7 +190,15 @@ const {
   data: sets,
   loading,
   error,
-} = useLoadData("getSets", [], false, ref(null), true, true, filterKey);
+} = useLoadData(
+  "getSets",
+  { items: [], total: 0 },
+  false,
+  ref(null),
+  true,
+  true,
+  filterKey,
+);
 
 const { data: themes } = useLoadData(
   "getThemes",

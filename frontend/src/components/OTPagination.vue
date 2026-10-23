@@ -1,4 +1,3 @@
-<!-- This example requires Tailwind CSS v2.0+ -->
 <template>
   <div
     class="flex items-center justify-between border-t border-gray-200 bg-white"
@@ -13,7 +12,7 @@
         :disabled="currentPage === 1"
         @click="$emit('changePage', currentPage - 1)"
       >
-        Previous
+        <OTText value="PAGINATION.PREVIOUS" />
       </button>
       <button
         class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
@@ -25,34 +24,21 @@
         :disabled="currentPage === totalPages"
         @click="$emit('changePage', currentPage + 1)"
       >
-        Next
+        <OTText value="PAGINATION.NEXT" />
       </button>
     </div>
 
     <!-- number of results -->
     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
       <div>
-        <!-- <i18n-t
-          class="text-sm text-gray-700"
-          keypath="table.pagination.text"
-          tag="p"
-        >
-          <template #start>
-            <span class="font-medium">{{ currentIndexes[0] }}</span>
-          </template>
-          <template #end>
-            <span class="font-medium">{{ currentIndexes[1] }}</span>
-          </template>
-          <template #total>
-            <span class="font-medium">{{ totalItems }}</span>
-          </template>
-        </i18n-t> -->
-
         <p class="text-sm text-gray-700">
-          Del
-          <span class="font-medium">{{ currentIndexes[0] }}</span> al
-          <span class="font-medium">{{ currentIndexes[1] }}</span> de
-          <span class="font-medium">{{ totalItems }}</span> resultados
+          {{
+            $t("PAGINATION.RANGE", {
+              start: number(currentIndexes[0], 0),
+              end: number(currentIndexes[1], 0),
+              total: number(totalItems, 0),
+            })
+          }}
         </p>
       </div>
 
@@ -70,7 +56,7 @@
             :disabled="currentPage === 1"
             @click="$emit('changePage', currentPage - 1)"
           >
-            <span class="sr-only">Previous</span>
+            <span class="sr-only">{{ $t("PAGINATION.PREVIOUS") }}</span>
             <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
           </button>
           <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
@@ -134,7 +120,7 @@
             :disabled="currentPage === totalPages"
             @click="$emit('changePage', currentPage + 1)"
           >
-            <span class="sr-only">Next</span>
+            <span class="sr-only">{{ $t("PAGINATION.NEXT") }}</span>
             <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
           </button>
         </nav>
@@ -147,6 +133,8 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/solid";
 
 import { toRefs, computed } from "vue";
+
+import { number } from "@/utils/helpers";
 
 const props = defineProps({
   currentPage: {

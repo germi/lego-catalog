@@ -72,7 +72,7 @@
       <OTText value="ERRORS.LOAD" />
     </p>
 
-    <p v-else-if="!parts.length" class="mt-10 text-sm text-gray-500">
+    <p v-else-if="!parts.items.length" class="mt-10 text-sm text-gray-500">
       <OTText value="PARTS.EMPTY" />
     </p>
 
@@ -80,7 +80,7 @@
       v-else
       class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5"
     >
-      <li v-for="part in parts" :key="part.id">
+      <li v-for="part in parts.items" :key="part.id">
         <RouterLink
           :to="{ name: 'part', params: { number: part.number } }"
           class="ot-ring block rounded-lg border border-gray-200 bg-white p-3 transition hover:border-gray-400"
@@ -104,25 +104,14 @@
       </li>
     </ul>
 
-    <div v-if="parts.length" class="mt-8 flex items-center justify-between">
-      <button
-        class="ot-btn text-sm disabled:opacity-40"
-        :disabled="page <= 1"
-        @click="page = page - 1"
-      >
-        <OTText value="PARTS.PREV" />
-      </button>
-      <span class="text-sm text-gray-500">
-        <OTText value="PARTS.PAGE" :options="{ page }" />
-      </span>
-      <button
-        class="ot-btn text-sm disabled:opacity-40"
-        :disabled="parts.length < 60"
-        @click="page = page + 1"
-      >
-        <OTText value="PARTS.NEXT" />
-      </button>
-    </div>
+    <OTPagination
+      v-if="parts.total > PER_PAGE.PARTS"
+      class="mt-8 pt-4"
+      :current-page="page"
+      :total-items="parts.total"
+      :items-per-page="PER_PAGE.PARTS"
+      @change-page="page = $event"
+    />
   </main>
 </template>
 
@@ -132,6 +121,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import useLoadData from "@/functions/useLoadData";
 import { useSingleRouteFilter } from "@/functions/useFilters";
+import { PER_PAGE } from "@/utils/ids";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -192,7 +182,15 @@ const {
   data: parts,
   loading,
   error,
-} = useLoadData("getParts", [], false, ref(null), true, true, filterKey);
+} = useLoadData(
+  "getParts",
+  { items: [], total: 0 },
+  false,
+  ref(null),
+  true,
+  true,
+  filterKey,
+);
 
 const { data: categories } = useLoadData(
   "getPartCategories",

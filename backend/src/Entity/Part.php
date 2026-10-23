@@ -59,6 +59,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['part:write']],
     order: ['number' => 'ASC'],
     paginationItemsPerPage: 60,
+    // The client decides its own page size; without this the request's itemsPerPage is
+    // silently ignored and the number above wins, which makes the UI and the API disagree.
+    paginationClientItemsPerPage: true,
+    paginationMaximumItemsPerPage: 200,
 )]
 // One box that searches the name and every number the part ever answered to.
 #[QueryParameter(

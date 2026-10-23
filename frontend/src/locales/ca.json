@@ -19,9 +19,6 @@
     "CLEAR": "Neteja els filtres",
     "EMPTY": "Cap peça coincideix amb aquests filtres.",
     "COLOR_COUNT": "cap color | 1 color | {count} colors",
-    "PREV": "Anterior",
-    "NEXT": "Següent",
-    "PAGE": "Pàgina {page}",
     "NO_FAMILY": "Sense família"
   },
   "PART": {
@@ -81,5 +78,10 @@
     "SHOW_SPARES": "Mostra els recanvis",
     "SPARE": "recanvi",
     "NO_INVENTORY": "Aquest set no té inventari al catàleg."
+  },
+  "PAGINATION": {
+    "PREVIOUS": "Anterior",
+    "NEXT": "Següent",
+    "RANGE": "Del {start} al {end} de {total} resultats"
   }
 }

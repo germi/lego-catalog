@@ -6,14 +6,18 @@ This file gives Claude Code context about this project. Update it when you set u
 
 ## What this project is
 
-The frontend of the Amazon price tracker: a Vue 3 + Vite SPA that charts price history
-and manages products and alerts. Everything it renders comes from the Symfony +
-API Platform backend in `../backend` (same repository — see the [root
-README](../README.md)). There is no server-side rendering.
+The frontend of the LEGO catalogue: a Vue 3 + Vite SPA for browsing parts, elements,
+colours, sets and minifigures, and — once built — what of them you own. Everything it
+renders comes from the Symfony + API Platform backend in `../backend` (same repository —
+see the [root README](../README.md)). There is no server-side rendering.
 
 `npm run build` emits into `../backend/public/app/`, so in production Symfony serves the
 API and this SPA from one origin. In dev, `VITE_API_URL` in `.env.development` points at
-the Symfony dev server on port 8077.
+the Symfony dev server on port 8078; `npm run dev` picks its own port, usually 5176
+because 5173–5175 are taken by other local projects.
+
+Read the root [CLAUDE.md](../CLAUDE.md) too — the part/element distinction it describes
+is the thing every screen here is built around.
 
 ---
 
@@ -72,7 +76,15 @@ Key rules:
 - **Add project endpoints only in `src/services/data.js`** — that is the only file you should edit day-to-day.
 - Reads pass `useCache: false`: the dashboard has to reflect a scrape or an edit straight away, and the factory's session cache would otherwise serve a stale list right after a mutation.
 - `apiFactory.js` is a building block — do not modify it.
-- Use `localApi` for files in `public/data/`, `externalApi` for the backend, `googleSheetsApi` for Google Sheets CSVs.
+- Two clients, both in `apis.js`: `legoApi` (plain JSON) for everything, and
+  `legoCollectionApi` (JSON-LD) for paginated lists — a plain-JSON collection is a bare
+  array and cannot report `totalItems`, which `OTPagination` needs. In `data.js` use the
+  `read()` and `readCollection()` helpers rather than the clients directly; they pass
+  `useCache: false` for you.
+- Page sizes live in `src/utils/ids.js` as `PER_PAGE`, and must match
+  `paginationItemsPerPage` on the matching API resource. The resources set
+  `paginationClientItemsPerPage: true`, without which the request's `itemsPerPage` is
+  silently ignored and the server's number wins.
 - In components, load data via the `useLoadData` composable (`src/functions/useLoadData.js`), not by calling the service directly.
 
 ---
@@ -96,14 +108,9 @@ Routes are defined in `src/routes.js`. Each route maps to a page component in `s
 | ---------------------- | ----------------------------------------------------- |
 | `npm run dev`          | Start dev server (exposed on local network)           |
 | `npm run build`        | Standard build                                        |
-| `npm run build-prod`   | Build with `--base` set for a subfolder deploy        |
-| `npm run build-zip`    | `build-prod` + ZIP the dist folder for client handoff |
 | `npm run process-csv`  | Run `scripts/csvToJson.js`                            |
 | `npm run process-json` | Run `scripts/jsonToCsv.js`                            |
-| `npm run generate-pdf` | Run `scripts/generatePDF.js`                          |
 | `npm run update-sidecharts` | Re-download the sidecharts library into `src/components/sidecharts/` |
-
-When deploying to a client's subfolder, update the `--base` path in `build-prod` inside `package.json` before running `build-zip`.
 
 ---
 
@@ -118,11 +125,8 @@ import { resolveFill } from "sidecharts/fill";
 
 In practice you rarely write these imports: `SidechartsResolver` in `vite.config.js` auto-imports any sidecharts Vue component on first use, so you can drop `<ScatterPlot>` or `<AxisLayer>` straight into a template. It reads the exported names from `src/components/sidecharts/vue/index.js` at config time — restart the dev server after `npm run update-sidecharts` so new components are picked up.
 
-`PriceChart.vue` composes `BaseCanvas` and the layers by hand rather than using the
-`<LineChart>` preset, because that preset's `computeFullYDomain` always anchors the y
-axis at zero — which flattens a €175–€235 price series into an unreadable band at the
-top of the plot. Its own projector supplies a tight y domain that the line, both axes
-and the target reference line all share.
+No chart uses sidecharts yet — the catalogue screens are grids and tables. The library
+is still vendored, so it is there when a chart is wanted.
 
 **Do not edit files under `src/components/sidecharts/` from this project** — they are overwritten on every update. Library changes go in the upstream sidecharts repo.
 
@@ -169,7 +173,9 @@ The `--base` path in `build-prod` must match the asset path on the client's serv
 
 Labels and translations are managed via the language system. See [docs/LANGUAGE-SYSTEM.md](docs/LANGUAGE-SYSTEM.md).
 
-**Every piece of declarative text visible in the app must be rendered through `OTText`**, not as a plain string or inline text node. `OTText` looks up the label by its `value` key in the active locale's JSON file (e.g. `public/data/lang/en.json`).
+**Every piece of declarative text visible in the app must be rendered through `OTText`**, not as a plain string or inline text node. `OTText` looks up the label by its `value` key in the active locale's JSON file, which in
+this project is `src/locales/ca.json` (Catalan only, bundled at build time — not
+`public/data/lang/`, which this project does not use).
 
 ```vue
 <OTText value="ABOUT.TITLE" />
@@ -198,7 +204,7 @@ Keys must be organized hierarchically by page or section — never use flat top-
 }
 ```
 
-**Whenever you add a new `OTText` key — or any `t()` call — you must also add the corresponding entry to every locale file in `public/data/lang/` (e.g. `en.json`) in the same change.** Never leave a key that exists in the code but is missing from the language files.
+**Whenever you add a new `OTText` key — or any `t()` call — you must also add the corresponding entry to `src/locales/ca.json` in the same change.** Never leave a key that exists in the code but is missing from the language files.
 
 ### i18n API
 
@@ -341,11 +347,20 @@ Add the class `image-hidden` to any child element that should be excluded from t
 
 ## Project-specific notes
 
-> Fill this section in when setting up a new project.
-
-- **Data source:** _e.g. local CSVs in public/data/, external API at …_
-- **Backend repo:** _link or "none"_
-- **Deploy target:** _Netlify / client CMS subfolder / …_
-- **Languages / locales:** _e.g. es, en_
-- **External chart library:** _repo name / npm package used for charts_
-- **Known quirks:** _anything unusual about this specific project_
+- **Data source:** the Symfony + API Platform backend in `../backend`, which imports its
+  catalogue from Rebrickable's CSV dumps.
+- **Backend repo:** same repository, `../backend`. Dev server on port 8078.
+- **Deploy target:** none — runs on localhost. The build is served by Symfony from
+  `/app/`.
+- **Languages / locales:** Catalan only, in `src/locales/ca.json`.
+- **External chart library:** sidecharts is vendored but unused so far.
+- **Known quirks:**
+  - Part names, colour names, set names and numbers are **data, not labels**: they are
+    shown exactly as the catalogues wrote them and never go through `OTText`.
+  - `PartThumb` falls back to the part number when a part has no drawing, which is most
+    of them — only about 2,700 parts have artwork. See the root README.
+  - Part drawings are Brick Architect's, used with permission and not openly licensed.
+    Credit Tom Alphin wherever they are shown.
+  - Filter state lives in the URL, so a filtered list is a link worth keeping. Search
+    boxes are deliberately *not* bound straight to the URL — that would push a history
+    entry and a refetch per keystroke.

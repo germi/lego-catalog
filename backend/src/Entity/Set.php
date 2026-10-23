@@ -54,6 +54,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['set:write']],
     order: ['year' => 'DESC', 'number' => 'ASC'],
     paginationItemsPerPage: 48,
+    // The client decides its own page size; without this the request's itemsPerPage is
+    // silently ignored and the number above wins, which makes the UI and the API disagree.
+    paginationClientItemsPerPage: true,
+    paginationMaximumItemsPerPage: 200,
 )]
 #[QueryParameter(
     key: 'q',
