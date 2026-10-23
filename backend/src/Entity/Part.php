@@ -111,7 +111,7 @@ class Part
      */
     #[ORM\ManyToOne(targetEntity: PartCategory::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    #[Groups(['part:read', 'catalog:summary'])]
+    #[Groups(['part:read'])]
     private ?PartCategory $primaryCategory = null;
 
     #[ORM\Column(enumType: PartMaterial::class, options: ['default' => 'plastic'])]

@@ -1,5 +1,8 @@
 import Home from "./pages/index.vue";
 import Part from "./pages/part.vue";
+import Sets from "./pages/sets.vue";
+// `Set` is taken by the global built-in, so the component gets a clearer alias here.
+import SetPage from "./pages/set.vue";
 import Language from "./pages/language.vue";
 import NotFound from "./pages/[...404].vue";
 
@@ -19,6 +22,21 @@ export const routes = [
     name: "part",
     component: Part,
     meta: { title: "Part" },
+  },
+
+  {
+    path: "/sets",
+    name: "sets",
+    component: Sets,
+    meta: { title: "Sets" },
+  },
+
+  // Sets are addressed by their catalogue number too, variant suffix included.
+  {
+    path: "/set/:number",
+    name: "set",
+    component: SetPage,
+    meta: { title: "Set" },
   },
 
   // Built-in label browser/editor. In dev, edits are written straight back to

@@ -40,7 +40,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [new GetCollection(), new Get(), new Post(), new Patch(), new Delete()],
     normalizationContext: ['groups' => ['set_element:read', 'catalog:summary']],
     denormalizationContext: ['groups' => ['set_element:write']],
-    paginationItemsPerPage: 200,
+    paginationItemsPerPage: 2000,
+    paginationMaximumItemsPerPage: 2000,
 )]
 #[QueryParameter(key: 'set', filter: new IriFilter(), property: 'set')]
 #[QueryParameter(key: 'element', filter: new IriFilter(), property: 'element')]
@@ -58,7 +59,7 @@ class SetElement
 
     #[ORM\ManyToOne(targetEntity: Set::class, inversedBy: 'elementLines')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[Groups(['set_element:read', 'set_element:write'])]
+    #[Groups(['set_element:write'])]
     private Set $set;
 
     #[ORM\ManyToOne(targetEntity: Element::class)]

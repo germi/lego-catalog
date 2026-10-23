@@ -2,7 +2,9 @@
   "TITLE": "Catàleg LEGO",
   "NAV": {
     "BRAND": "Catàleg LEGO",
-    "API": "API"
+    "API": "API",
+    "PARTS": "Peces",
+    "SETS": "Sets"
   },
   "PARTS": {
     "TITLE": "Peces",
@@ -51,5 +53,33 @@
     "LOAD": "No s'han pogut carregar les dades.",
     "GENERIC": "Alguna cosa ha anat malament.",
     "NO_API": "No es pot connectar amb l'API."
+  },
+  "SETS": {
+    "TITLE": "Sets",
+    "SUBTITLE": "Caixes. El número inclou el sufix de variant: 10179-1 és el primer llançament del 10179.",
+    "SEARCH": "Cerca",
+    "SEARCH_PLACEHOLDER": "Número o nom (p. ex. 10179 o Millennium)",
+    "THEME": "Tema",
+    "ALL_THEMES": "Tots els temes",
+    "YEAR_FROM": "Des de l'any",
+    "YEAR_TO": "Fins a l'any",
+    "CLEAR": "Neteja els filtres",
+    "EMPTY": "Cap set coincideix amb aquests filtres.",
+    "PIECES": "cap peça | 1 peça | {count} peces"
+  },
+  "SET": {
+    "BACK": "← Torna als sets",
+    "NOT_FOUND": "No s'ha trobat aquest set.",
+    "BOX_COUNT": "Peces a la caixa",
+    "LOOSE_PARTS": "Peces soltes",
+    "MINIFIG_PARTS": "Peces de minifigura",
+    "SPARES": "Recanvis",
+    "COUNT_HELP": "El número de la caixa són les peces soltes més les de les minifigures. Els recanvis no hi compten.",
+    "MINIFIGS": "Minifigures",
+    "SUBSETS": "Sets inclosos",
+    "INVENTORY": "Inventari",
+    "SHOW_SPARES": "Mostra els recanvis",
+    "SPARE": "recanvi",
+    "NO_INVENTORY": "Aquest set no té inventari al catàleg."
   }
 }

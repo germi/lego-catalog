@@ -125,8 +125,22 @@ export default {
     return legoApi(
       `/api/set_elements${qs({
         set: iri("sets", params.id),
-        itemsPerPage: 500,
+        itemsPerPage: 2000,
       })}`,
+    );
+  },
+
+  /** The minifigures a set contains, with quantities. */
+  getSetMinifigs(params = {}) {
+    return legoApi(
+      `/api/set_minifigs${qs({ set: iri("sets", params.id), itemsPerPage: 200 })}`,
+    );
+  },
+
+  /** Sets packaged inside this one. */
+  getSetSubsets(params = {}) {
+    return legoApi(
+      `/api/set_subsets${qs({ set: iri("sets", params.id), itemsPerPage: 200 })}`,
     );
   },
 

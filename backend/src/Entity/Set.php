@@ -107,7 +107,7 @@ class Set
 
     #[ORM\ManyToOne(targetEntity: Theme::class, inversedBy: 'sets')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    #[Groups(['set:read', 'set:write', 'catalog:summary'])]
+    #[Groups(['set:read', 'set:write'])]
     private ?Theme $theme = null;
 
     /** Regular lines only — see the class docblock. */

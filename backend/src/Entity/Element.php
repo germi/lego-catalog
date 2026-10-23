@@ -98,7 +98,7 @@ class Element
 
     /** @var Collection<int, ElementCode> */
     #[ORM\OneToMany(targetEntity: ElementCode::class, mappedBy: 'element', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[Groups(['element:read', 'catalog:summary'])]
+    #[Groups(['element:read'])]
     private Collection $codes;
 
     public function __construct(?Part $part = null, ?Color $color = null)
