@@ -35,6 +35,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: PartCategoryRepository::class)]
 #[ORM\Table(name: 'part_category')]
 #[ORM\UniqueConstraint(name: 'uniq_part_category_taxonomy_slug', columns: ['taxonomy_id', 'slug'])]
+// The source's own id is the stable identity of an imported category. Keying the import
+// on the slug instead let a second run mint a suffixed slug and insert a twin of every
+// category. NULL is allowed many times over, which is what hand-made categories need.
+#[ORM\UniqueConstraint(name: 'uniq_part_category_taxonomy_code', columns: ['taxonomy_id', 'external_code'])]
 #[ORM\Index(name: 'idx_part_category_path', columns: ['path'])]
 #[ORM\Index(name: 'idx_part_category_parent', columns: ['parent_id'])]
 #[ApiResource(

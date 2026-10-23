@@ -87,6 +87,14 @@ this.
   `color.name` are inserted but never updated, so a correction made by hand survives a
   re-import. The cost is that improving the classifier does not reach existing rows,
   which is what `app:colors:classify` is for — it only ever fills a gap.
+- **An import must key its upsert on the source's own id, never on a derived value.**
+  Categories keyed on `(taxonomy_id, slug)`, and `uniqueSlug()` treats an existing row's
+  own slug as a collision — so a second run minted `bricks-11` where the first had made
+  `bricks`, matched nothing, and inserted a twin of all 76 categories, with the
+  assignments landing on one and leaving the other empty. The key is now
+  `(taxonomy_id, external_code)` and the slug is reused from the existing row. Themes and
+  colours were never affected because they key on `rebrickable_id`. Re-run any stage twice
+  and check the row count before believing it is idempotent.
 - **The importer never deletes.** A part that drops out of a dump stays in the
   catalogue, because it did not stop existing in the real world.
 - **`path` and `depth` on the three trees are derived, and `rebuildPath()` is not a

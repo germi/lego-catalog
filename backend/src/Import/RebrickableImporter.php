@@ -175,6 +175,16 @@ final class RebrickableImporter
         $path = $this->downloader->fetch('part_categories', $maxAge, $force);
         $taxonomyId = $this->rebrickableTaxonomyId();
         $taken = $this->map('SELECT slug, id FROM part_category WHERE taxonomy_id = '.$taxonomyId);
+
+        // The slug a category already has, keyed by the source's own id. Without this, a
+        // second run finds its own slug "taken", generates a suffixed one, and — since
+        // the upsert keys on the source id — would leave the row's slug churning. The
+        // source id is the stable identity here; the slug is derived from a name that
+        // can be edited by hand afterwards.
+        $existingSlugs = $this->mapString(
+            'SELECT external_code, slug FROM part_category WHERE taxonomy_id = '.$taxonomyId.' AND external_code IS NOT NULL'
+        );
+
         $rows = [];
         $seen = 0;
 
@@ -182,7 +192,7 @@ final class RebrickableImporter
         // hierarchy the project wants lives in the BrickLink and Brick Architect trees.
         foreach ($this->csv->rows($path, ['id', 'name']) as $row) {
             ++$seen;
-            $slug = $this->uniqueSlug($row['name'], $taken, $row['id']);
+            $slug = $existingSlugs[$row['id']] ?? $this->uniqueSlug($row['name'], $taken, $row['id']);
             $rows[] = [$taxonomyId, $row['name'], $slug, $slug, 0, $row['id'], (int) $row['id']];
         }
 
@@ -190,8 +200,9 @@ final class RebrickableImporter
             'part_category',
             ['taxonomy_id', 'name', 'slug', 'path', 'depth', 'external_code', 'sort_order'],
             $rows,
+            // Not the slug: it is derived, and a hand-edited one must survive a re-import.
             ['name', 'path', 'depth'],
-            'taxonomy_id, slug',
+            'taxonomy_id, external_code',
         );
 
         return ['read' => $seen, 'written' => $written];
@@ -813,6 +824,17 @@ final class RebrickableImporter
     private static function truthy(string $value): bool
     {
         return \in_array(strtolower(trim($value)), ['t', 'true', '1', 'y', 'yes'], true);
+    }
+
+    /** @return array<string, string> */
+    private function mapString(string $sql): array
+    {
+        $out = [];
+        foreach ($this->connection->fetchAllNumeric($sql) as [$key, $value]) {
+            $out[(string) $key] = (string) $value;
+        }
+
+        return $out;
     }
 
     /** @return array<string, int> */
