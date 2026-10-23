@@ -57,8 +57,12 @@ symfony server:start --port=8078 --daemon
 # Frontend
 cd ../frontend
 npm install
-npm run dev
+npm run dev     # prints its port; 5173-5175 are usually taken, so often 5176
 ```
+
+The dev server is where you look while working. The built bundle lives at
+`http://localhost:8078/app/`, which only exists after `npm run build`; bare
+`http://localhost:8078/` redirects there and tells you when there is no build yet.
 
 The order matters: `app:seed` creates the taxonomy the importer files parts into, and
 the two rebuild commands fill columns that are derived from what the import just wrote.

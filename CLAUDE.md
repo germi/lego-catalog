@@ -26,8 +26,20 @@ Ports 8000–8003 and 8077 are taken by other local projects, so this one uses *
 
 ```bash
 cd backend  && symfony server:start --port=8078 --daemon
-cd frontend && npm run dev        # or: npm run build, then open /app/ on 8078
+cd frontend && npm run dev
 ```
+
+**Where the UI actually is.** Two different things serve it:
+
+- `npm run dev` — Vite, with hot reload. It prints the port it settled on; 5173–5175 are
+  usually taken by other local projects, so it is often 5176. This is the one to use
+  while working.
+- `http://localhost:8078/app/` — the built bundle, which only exists after
+  `npm run build`. `http://localhost:8078/` redirects here, and says so when there is no
+  build yet.
+
+The API is on 8078 either way; `.env.development` points the dev server at it, and CORS
+allows localhost on any port.
 
 First run, in order — the importer needs the seeded taxonomy to file parts into:
 
